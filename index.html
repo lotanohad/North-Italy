@@ -266,6 +266,8 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 .countdown-label{font-size:13px;opacity:.9}
 .countdown-icon{font-size:36px}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -347,7 +349,11 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
               <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Gabriele d'Annunzio 8, 21010 Vizzola Ticino (VA)</div>
               <a href="https://maps.google.com/?q=Tribe+Milano+Malpensa+Via+Gabriele+D+Annunzio+8+Vizzola+Ticino" target="_blank"
                 style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 פתח ב-Google Maps →
+                📍 Google Maps →
+              </a>
+              <a href="https://waze.com/ul?q=Via+Gabriele+D+Annunzio+8+Vizzola+Ticino+Italy" target="_blank"
+                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+                🔵 Waze →
               </a>
             </div>
             <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
@@ -374,7 +380,11 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
               <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Gabriele d'Annunzio 8, 21010 Vizzola Ticino (VA)</div>
               <a href="https://maps.google.com/?q=Tribe+Milano+Malpensa+Via+Gabriele+D+Annunzio+8+Vizzola+Ticino" target="_blank"
                 style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 פתח ב-Google Maps →
+                📍 Google Maps →
+              </a>
+              <a href="https://waze.com/ul?q=Via+Marconi+99+Padenghe+sul+Garda+Italy" target="_blank"
+                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+                🔵 Waze →
               </a>
             </div>
             <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
@@ -401,7 +411,11 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
               <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Marconi 99, Padenghe sul Garda 25080 BS</div>
               <a href="https://maps.google.com/?q=Splendido+Bay+Via+Marconi+99+Padenghe+sul+Garda" target="_blank"
                 style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 פתח ב-Google Maps →
+                📍 Google Maps →
+              </a>
+              <a href="https://waze.com/ul?q=Borgo+Argenina+Gaiole+in+Chianti+Italy" target="_blank"
+                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+                🔵 Waze →
               </a>
             </div>
             <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
@@ -428,7 +442,11 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
               <div style="font-size:13px;color:#6c6c70;margin-top:2px">Loc. Argenina, 53013 Gaiole in Chianti (Siena)</div>
               <a href="https://maps.google.com/?q=Borgo+Argenina+Gaiole+in+Chianti+Siena" target="_blank"
                 style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 פתח ב-Google Maps →
+                📍 Google Maps →
+              </a>
+              <a href="https://waze.com/ul?q=Piazzale+Flaminio+9+Rome+Italy" target="_blank"
+                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+                🔵 Waze →
               </a>
             </div>
             <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
@@ -626,34 +644,7 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
     <!-- ── PAGE 3: CHAT ── -->
     <div class="page" id="page-chat">
       <div class="chat-messages" id="chatMessages">
-        <div class="msg other">
-          <div class="msg-avatar">👩</div>
-          <div>
-            <div class="msg-bubble">היי! כל כך נרגשת לטיסה! 🇮🇹✨</div>
-            <div class="msg-time">היום 10:00</div>
-          </div>
-        </div>
-        <div class="msg me">
-          <div class="msg-avatar">👨</div>
-          <div>
-            <div class="msg-bubble">גם אני! לא מחכה לראות את גארדה 😍</div>
-            <div class="msg-time">היום 10:02</div>
-          </div>
-        </div>
-        <div class="msg other">
-          <div class="msg-avatar">👩</div>
-          <div>
-            <div class="msg-bubble">צריך להזמין את הרכבל ב-Malcesine מראש?</div>
-            <div class="msg-time">היום 10:05</div>
-          </div>
-        </div>
-        <div class="msg me">
-          <div class="msg-avatar">👨</div>
-          <div>
-            <div class="msg-bubble">כן! עדיף להזמין אונליין – באוגוסט עמוס מאוד 🚡</div>
-            <div class="msg-time">היום 10:07</div>
-          </div>
-        </div>
+
       </div>
       <div class="chat-input-wrap">
         <div class="chat-who">
@@ -785,7 +776,20 @@ function toggleCard(id) {
   card.classList.toggle('open');
 }
 
-// ── CHAT ──
+// ── FIREBASE CHAT ──
+const firebaseConfig = {
+  apiKey: "AIzaSyBvMngqexkyTDX0TevEPGrqqQZpPOuJRFo",
+  authDomain: "italy-2026-ff67d.firebaseapp.com",
+  databaseURL: "https://italy-2026-ff67d-default-rtdb.firebaseio.com",
+  projectId: "italy-2026-ff67d",
+  storageBucket: "italy-2026-ff67d.firebasestorage.app",
+  messagingSenderId: "285358918234",
+  appId: "1:285358918234:web:fd76ac833519a3c717a663"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const messagesRef = db.ref('chat/messages');
+
 let chatWho = 'me';
 const chatMessages = document.getElementById('chatMessages');
 
@@ -795,6 +799,30 @@ function switchWho(who) {
   document.getElementById('whoHer').classList.toggle('active', who === 'her');
 }
 
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function renderMsg(msg) {
+  const isMe = msg.who === 'me';
+  const avatar = isMe ? '👨' : '👩';
+  const div = document.createElement('div');
+  div.className = 'msg ' + (isMe ? 'me' : 'other');
+  div.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div>
+      <div class="msg-bubble">${escHtml(msg.text)}</div>
+      <div class="msg-time">${msg.time}</div>
+    </div>`;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Load existing messages + listen for new ones
+messagesRef.on('child_added', snap => {
+  renderMsg(snap.val());
+});
+
 function sendMsg() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
@@ -802,26 +830,11 @@ function sendMsg() {
 
   const now = new Date();
   const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-  const isMe = chatWho === 'me';
-  const avatar = isMe ? '👨' : '👩';
 
-  const div = document.createElement('div');
-  div.className = 'msg ' + (isMe ? 'me' : 'other');
-  div.innerHTML = `
-    <div class="msg-avatar">${avatar}</div>
-    <div>
-      <div class="msg-bubble">${escHtml(text)}</div>
-      <div class="msg-time">${time}</div>
-    </div>`;
-  chatMessages.appendChild(div);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  messagesRef.push({ who: chatWho, text, time, ts: Date.now() });
 
   input.value = '';
   input.style.height = 'auto';
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 
 // ── PHOTOS ──
