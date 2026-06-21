@@ -777,28 +777,7 @@ function toggleCard(id) {
 }
 
 // ── FIREBASE CHAT ──
-let messagesRef;
-
-function initFirebase() {
-  const firebaseConfig = {
-  apiKey: "AIzaSyBvMngqexkyTDX0TevEPGrqqQZpPOuJRFo",
-  authDomain: "italy-2026-ff67d.firebaseapp.com",
-  databaseURL: "https://italy-2026-ff67d-default-rtdb.firebaseio.com",
-  projectId: "italy-2026-ff67d",
-  storageBucket: "italy-2026-ff67d.firebasestorage.app",
-  messagingSenderId: "285358918234",
-  appId: "1:285358918234:web:fd76ac833519a3c717a663"
-};
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  messagesRef = db.ref('chat/messages');
-  messagesRef.on('child_added', snap => {
-    renderMsg(snap.val());
-  });
-}
-
 let chatWho = 'me';
-const chatMessages = document.getElementById('chatMessages');
 
 function switchWho(who) {
   chatWho = who;
@@ -811,16 +790,12 @@ function escHtml(s) {
 }
 
 function renderMsg(msg) {
+  const chatMessages = document.getElementById('chatMessages');
   const isMe = msg.who === 'me';
   const avatar = isMe ? '👨' : '👩';
   const div = document.createElement('div');
   div.className = 'msg ' + (isMe ? 'me' : 'other');
-  div.innerHTML = `
-    <div class="msg-avatar">${avatar}</div>
-    <div>
-      <div class="msg-bubble">${escHtml(msg.text)}</div>
-      <div class="msg-time">${msg.time}</div>
-    </div>`;
+  div.innerHTML = `<div class="msg-avatar">${avatar}</div><div><div class="msg-bubble">${escHtml(msg.text)}</div><div class="msg-time">${msg.time}</div></div>`;
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -828,17 +803,25 @@ function renderMsg(msg) {
 function sendMsg() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
-  if(!text) return;
-  if(!messagesRef) { alert('Chat not connected yet, please wait a moment'); return; }
-
+  if (!text) return;
   const now = new Date();
   const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-
-  messagesRef.push({ who: chatWho, text, time, ts: Date.now() });
-
+  firebase.database().ref('chat/messages').push({ who: chatWho, text, time, ts: Date.now() });
   input.value = '';
   input.style.height = 'auto';
 }
+
+// Init Firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyBvMngqexkyTDX0TevEPGrqqQZpPOuJRFo",
+  authDomain: "italy-2026-ff67d.firebaseapp.com",
+  databaseURL: "https://italy-2026-ff67d-default-rtdb.firebaseio.com",
+  projectId: "italy-2026-ff67d",
+  storageBucket: "italy-2026-ff67d.firebasestorage.app",
+  messagingSenderId: "285358918234",
+  appId: "1:285358918234:web:fd76ac833519a3c717a663"
+});
+firebase.database().ref('chat/messages').on('child_added', snap => renderMsg(snap.val()));
 
 // ── PHOTOS ──
 // Using embedded Google Drive folder
