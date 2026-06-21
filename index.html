@@ -718,6 +718,10 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
 // ── SPLASH ──
+// Unregister old service worker to prevent caching issues
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
 window.addEventListener('load', () => {
   setTimeout(() => {
     document.getElementById('splash').classList.add('hide');
@@ -725,10 +729,7 @@ window.addEventListener('load', () => {
   }, 2200);
 });
 
-// ── SERVICE WORKER ──
-if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
+// Service worker disabled to prevent caching
 
 // ── COUNTDOWN ──
 function updateCountdown() {
