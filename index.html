@@ -266,8 +266,6 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 .countdown-label{font-size:13px;opacity:.9}
 .countdown-icon{font-size:36px}
 </style>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -716,6 +714,8 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
   <div class="lb-caption" id="lbCaption"></div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
 // ── SPLASH ──
 window.addEventListener('load', () => {
@@ -755,6 +755,7 @@ function updateCountdown() {
   }
 }
 updateCountdown();
+initFirebase();
 
 // ── TABS ──
 function switchTab(name, btn) {
@@ -777,7 +778,10 @@ function toggleCard(id) {
 }
 
 // ── FIREBASE CHAT ──
-const firebaseConfig = {
+let messagesRef;
+
+function initFirebase() {
+  const firebaseConfig = {
   apiKey: "AIzaSyBvMngqexkyTDX0TevEPGrqqQZpPOuJRFo",
   authDomain: "italy-2026-ff67d.firebaseapp.com",
   databaseURL: "https://italy-2026-ff67d-default-rtdb.firebaseio.com",
@@ -786,9 +790,13 @@ const firebaseConfig = {
   messagingSenderId: "285358918234",
   appId: "1:285358918234:web:fd76ac833519a3c717a663"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const messagesRef = db.ref('chat/messages');
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  messagesRef = db.ref('chat/messages');
+  messagesRef.on('child_added', snap => {
+    renderMsg(snap.val());
+  });
+}
 
 let chatWho = 'me';
 const chatMessages = document.getElementById('chatMessages');
@@ -817,11 +825,6 @@ function renderMsg(msg) {
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
-// Load existing messages + listen for new ones
-messagesRef.on('child_added', snap => {
-  renderMsg(snap.val());
-});
 
 function sendMsg() {
   const input = document.getElementById('chatInput');
