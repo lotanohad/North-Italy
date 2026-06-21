@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="איטליה 🇮🇹"/>
 <link rel="manifest" href="manifest.json"/>
-<script src="https://accounts.google.com/gsi/client"></script>
 <link rel="apple-touch-icon" href="icon-192.png"/>
 <title>איטליה 2025</title>
 <style>
@@ -634,33 +633,20 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 
 
     <!-- ── PAGE 4: PHOTOS ── -->
-    <div class="page" id="page-photos">
+    <div class="page" id="page-photos" style="padding-bottom:0">
       <div class="section-title">תמונות הטיול</div>
-      <div id="gphotos-auth" style="margin:16px;text-align:center">
-        <div style="background:#fff;border-radius:16px;padding:28px 20px;box-shadow:0 1px 4px rgba(0,0,0,.08)">
-          <div style="font-size:48px;margin-bottom:12px">📸</div>
-          <div style="font-size:17px;font-weight:700;color:#1c1c1e;margin-bottom:6px">התחבר ל-Google Photos</div>
-          <div style="font-size:13px;color:#6c6c70;margin-bottom:20px">כדי לראות את תמונות הטיול שלכם</div>
-          <button onclick="signInGoogle()" style="background:#1a7a4a;color:#fff;border:none;border-radius:14px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px">
-            <span>🔗</span> התחבר עם Google
-          </button>
-        </div>
+      <div style="margin:0 16px 12px;background:#fff;border-radius:16px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+        <div style="font-size:14px;color:#6c6c70;margin-bottom:12px">כל התמונות שלנו מאיטליה 🇮🇹</div>
+        <a href="https://drive.google.com/drive/folders/1UxcnVd4E2I97iAxTGyUxXdmvy8NVZP0R" target="_blank"
+          style="display:flex;align-items:center;justify-content:center;gap:10px;background:#1a7a4a;color:#fff;text-decoration:none;border-radius:14px;padding:14px;font-size:16px;font-weight:600">
+          <span>📁</span> פתח תיקיית תמונות
+        </a>
       </div>
-      <div id="gphoto-albums" style="display:none;padding:0 16px 12px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-size:15px;font-weight:700;color:#1c1c1e" id="gphoto-user"></div>
-          <button onclick="signOutGoogle()" style="font-size:12px;color:#6c6c70;background:none;border:1px solid #e5e5ea;border-radius:20px;padding:4px 12px;cursor:pointer">התנתק</button>
-        </div>
-        <div style="font-size:13px;color:#6c6c70;margin-bottom:12px">בחר אלבום לצפייה:</div>
-        <div id="albums-list" style="display:flex;flex-direction:column;gap:10px"></div>
-      </div>
-      <div id="gphoto-grid" style="display:none">
-        <div style="padding:12px 16px;display:flex;align-items:center;gap:10px">
-          <button onclick="backToAlbums()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#1a7a4a">←</button>
-          <div style="font-size:16px;font-weight:700" id="current-album-title"></div>
-        </div>
-        <div class="photos-grid" id="photosGrid"></div>
-      </div>
+      <iframe
+        src="https://drive.google.com/embeddedfolderview?id=1UxcnVd4E2I97iAxTGyUxXdmvy8NVZP0R#grid"
+        style="width:100%;height:calc(100vh - 220px);border:none;border-radius:0"
+        allowfullscreen>
+      </iframe>
     </div><!-- /page-photos -->
 
   </div><!-- /pages -->
@@ -792,99 +778,11 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 
-// ── GOOGLE PHOTOS ──
-const GAPI_CLIENT_ID = '604582088772-q4jev419btjdflj2pal22gn7ihnl3noj.apps.googleusercontent.com';
-const GAPI_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly';
-let gAccessToken = null;
-let currentPhotos = [];
-
-function signInGoogle() {
-  if(typeof google === 'undefined') {
-    alert('Google script not loaded yet. Please refresh the page.');
-    return;
-  }
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: GAPI_CLIENT_ID,
-    scope: GAPI_SCOPE,
-    callback: (resp) => {
-      if(resp.access_token) {
-        gAccessToken = resp.access_token;
-        document.getElementById('gphoto-user').textContent = '✅ מחובר ל-Google Photos';
-        document.getElementById('gphoto-albums').style.display = 'block';
-        document.getElementById('gphoto-auth').style.display = 'none';
-        loadAlbums();
-      }
-    }
-  });
-  client.requestAccessToken();
-}
-
-function signOutGoogle() {
-  gAccessToken = null;
-  document.getElementById('gphoto-albums').style.display = 'none';
-  document.getElementById('gphoto-grid').style.display = 'none';
-  document.getElementById('gphoto-auth').style.display = 'block';
-}
-
-async function loadAlbums() {
-  const res = await fetch('https://photoslibrary.googleapis.com/v1/albums?pageSize=20', {
-    headers: { Authorization: 'Bearer ' + gAccessToken }
-  });
-  const data = await res.json();
-  const list = document.getElementById('albums-list');
-  if(!data.albums || data.albums.length === 0) {
-    list.innerHTML = '<div style="color:#6c6c70;font-size:14px">לא נמצאו אלבומים</div>';
-    return;
-  }
-  list.innerHTML = data.albums.map(a => `
-    <div onclick="loadAlbumPhotos('${a.id}','${(a.title||'ללא שם').replace(/'/g,"\'")}'')"
-      style="background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08)">
-      ${a.coverPhotoBaseUrl ? `<img src="${a.coverPhotoBaseUrl}=w60-h60-c" style="width:48px;height:48px;border-radius:8px;object-fit:cover"/>` : '<div style="width:48px;height:48px;border-radius:8px;background:#e8f4ed;display:flex;align-items:center;justify-content:center;font-size:22px">📁</div>'}
-      <div>
-        <div style="font-size:15px;font-weight:600;color:#1c1c1e">${a.title||'ללא שם'}</div>
-        <div style="font-size:12px;color:#6c6c70;margin-top:2px">${a.mediaItemsCount||0} תמונות</div>
-      </div>
-    </div>`).join('');
-}
-
-async function loadAlbumPhotos(albumId, title) {
-  document.getElementById('current-album-title').textContent = title;
-  document.getElementById('gphoto-albums').style.display = 'none';
-  document.getElementById('gphoto-grid').style.display = 'block';
-  const photosGrid = document.getElementById('photosGrid');
-  photosGrid.innerHTML = '<div class="photo-empty"><div style="font-size:32px">⏳</div><div>טוען תמונות...</div></div>';
-  const res = await fetch('https://photoslibrary.googleapis.com/v1/mediaItems:search', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + gAccessToken, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ albumId, pageSize: 50 })
-  });
-  const data = await res.json();
-  currentPhotos = data.mediaItems || [];
-  renderPhotos();
-}
-
-function backToAlbums() {
-  document.getElementById('gphoto-grid').style.display = 'none';
-  document.getElementById('gphoto-albums').style.display = 'block';
-}
-
-function renderPhotos() {
-  const photosGrid = document.getElementById('photosGrid');
-  if(currentPhotos.length === 0) {
-    photosGrid.innerHTML = '<div class="photo-empty"><div class="pe-icon">📷</div><div>אין תמונות באלבום זה</div></div>';
-    return;
-  }
-  photosGrid.innerHTML = currentPhotos.map((p,i) => `
-    <div class="photo-item" onclick="openLightbox(${i})">
-      <img src="${p.baseUrl}=w300-h300-c" alt="${p.filename||''}"/>
-    </div>`).join('');
-}
+// ── PHOTOS ──
+// Using embedded Google Drive folder
 
 function openLightbox(i) {
-  const p = currentPhotos[i];
-  document.getElementById('lbImg').src = p.baseUrl + '=w1200';
-  document.getElementById('lbCaption').textContent = p.filename || '';
-  document.getElementById('lightbox').classList.add('open');
+  // not used with Drive embed
 }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
