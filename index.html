@@ -829,6 +829,7 @@ function sendMsg() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if(!text) return;
+  if(!messagesRef) { alert('Chat not connected yet, please wait a moment'); return; }
 
   const now = new Date();
   const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
