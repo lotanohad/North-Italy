@@ -158,6 +158,48 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 .route-stop-info .route-stop-name{font-size:15px;font-weight:700;color:var(--text)}
 .route-stop-info .route-stop-dates{font-size:12px;color:var(--text-sec);margin-top:2px}
 .route-line-v{width:2px;background:linear-gradient(to bottom,var(--green),transparent);height:20px;margin:2px 0 2px 17px}
+.route-stop.clickable{cursor:pointer}
+.route-stop.clickable:active{opacity:.7}
+.route-stop-arrow{margin-inline-start:auto;color:var(--green);font-size:18px;align-self:center}
+
+/* ── DAYS GRID ── */
+.days-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 16px}
+.day-tile{
+  background:var(--card-bg);border-radius:16px;padding:18px 12px;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);text-align:center;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:transform .15s;
+}
+.day-tile:active{transform:scale(.96)}
+.day-tile-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.day-tile-title{font-size:14px;font-weight:700;color:var(--text);margin-top:4px}
+.day-tile-sub{font-size:12px;color:var(--text-sec)}
+.day-tile-more{font-size:11px;color:var(--green);font-weight:600;margin-top:4px}
+
+/* ── DETAIL MODAL (bottom sheet) ── */
+.detail-modal{
+  position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.5);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.detail-modal.open{opacity:1;pointer-events:auto}
+.detail-sheet{
+  background:#f2f2f7;border-radius:20px 20px 0 0;max-height:88vh;width:100%;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateY(100%);transition:transform .3s ease;
+  padding-bottom:calc(var(--safe-bottom) + 20px);
+}
+.detail-modal.open .detail-sheet{transform:translateY(0)}
+.detail-sheet-handle{width:36px;height:5px;background:#d1d1d6;border-radius:3px;margin:10px auto}
+.detail-sheet-header{display:flex;align-items:center;gap:12px;padding:6px 16px 14px;position:sticky;top:0;background:#f2f2f7;z-index:1}
+.detail-sheet-icon{width:44px;height:44px;border-radius:12px;background:#e8f4ed;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.detail-sheet-title{font-size:17px;font-weight:700;color:var(--text)}
+.detail-sheet-sub{font-size:13px;color:var(--text-sec);margin-top:2px}
+.detail-sheet-close{
+  margin-inline-start:auto;width:32px;height:32px;border-radius:50%;background:#e5e5ea;border:none;
+  font-size:15px;color:var(--text-sec);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.detail-sheet-body{padding:0 16px 16px}
 
 /* ── CHAT ── */
 .chat-page{display:flex;flex-direction:column;height:100%}
@@ -328,196 +370,182 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 
       <div class="section-title">לוח ימים</div>
 
-      <!-- MILAN 12-13.8 -->
-      <div class="card" id="day1">
-        <div class="card-header" onclick="toggleCard('day1')">
-          <div class="card-icon" style="background:#e8f4ed">🏙️</div>
-          <div class="card-info">
-            <div class="card-title">12.8 – 13.8</div>
-            <div class="card-sub">מילאנו – לילה אחד</div>
-          </div>
-          <div class="card-chevron">›</div>
+      <div class="days-grid">
+        <div class="day-tile" onclick="openDetail('day1')">
+          <div class="day-tile-icon" style="background:#e8f4ed">🏙️</div>
+          <div class="day-tile-title">12.8 – 13.8</div>
+          <div class="day-tile-sub">מילאנו – לילה אחד</div>
+          <div class="day-tile-more">פרטים ›</div>
         </div>
-        <div class="card-body">
-          <div class="card-content">
-            <div class="region-badge">🏙️ מילאנו</div>
-            <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
-              <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
-              <div style="font-size:15px;font-weight:700;color:#1c1c1e">Tribe Milano Malpensa</div>
-              <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Gabriele d'Annunzio 8, 21010 Vizzola Ticino (VA)</div>
-              <a href="https://maps.google.com/?q=Tribe+Milano+Malpensa+Via+Gabriele+D+Annunzio+8+Vizzola+Ticino" target="_blank"
-                style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 Google Maps →
-              </a>
-              <a href="https://waze.com/ul?q=Via+Gabriele+D+Annunzio+8+Vizzola+Ticino+Italy" target="_blank"
-                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
-                🔵 Waze →
-              </a>
-            </div>
-            <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
-
-            <!-- CAR RENTAL -->
-            <div style="background:#fff3e0;border-radius:12px;padding:14px;margin-top:4px;border:1.5px solid #ffe0b2">
-              <div style="font-size:13px;font-weight:700;color:#e65100;margin-bottom:8px">🚗 השכרת רכב</div>
-              <div style="font-size:15px;font-weight:700;color:#1c1c1e">Nissan Qashqai (or similar)</div>
-              <div style="font-size:13px;color:#6c6c70;margin-top:2px">Intermediate SUV · Automatic · 5 seats · Unlimited mileage</div>
-
-              <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
-                <div style="display:flex;gap:8px;font-size:13px">
-                  <span style="color:#6c6c70;width:60px;flex-shrink:0">📋 מספר</span>
-                  <span style="font-weight:700;color:#1c1c1e">757582437</span>
-                </div>
-                <div style="display:flex;gap:8px;font-size:13px">
-                  <span style="color:#6c6c70;width:60px;flex-shrink:0">🔑 איסוף</span>
-                  <span style="color:#1c1c1e">13.8 · 10:00 · Milan Malpensa T1</span>
-                </div>
-                <div style="display:flex;gap:8px;font-size:13px">
-                  <span style="color:#6c6c70;width:60px;flex-shrink:0">🏁 החזרה</span>
-                  <span style="color:#1c1c1e">26.8 · 09:30 · Fiumicino Airport (Rome)</span>
-                </div>
-                <div style="display:flex;gap:8px;font-size:13px">
-                  <span style="color:#6c6c70;width:60px;flex-shrink:0">🏢 חברה</span>
-                  <span style="color:#1c1c1e">Locauto · Level -1, Terminal 1</span>
-                </div>
-              </div>
-
-              <div style="margin-top:10px;font-size:12px;background:#fff8f0;border-radius:8px;padding:8px 10px;color:#666;line-height:1.5">
-                📌 <strong>איך להגיע לדלפק:</strong> מגיעים לאזור Arrivals ב-T1 → עוקבים אחרי שלטי "Rent-a-car" / "Autonoleggi" → יורדים לקומה -1 → Locauto נמצא בצד ימין
-              </div>
-
-              <div style="margin-top:10px;display:flex;gap:8px">
-                <a href="https://maps.google.com/?q=Locauto+Rent+Malpensa+Terminal+1+Ferno+Italy" target="_blank"
-                  style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
-                <a href="https://waze.com/ul?q=Aeroporto+Malpensa+Terminal+1+Ferno+Italy+21010" target="_blank"
-                  style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">🔵 Waze →</a>
-              </div>
-            </div>
-          </div>
+        <div class="day-tile" onclick="openDetail('day3')">
+          <div class="day-tile-icon" style="background:#e3f2fd">🏊</div>
+          <div class="day-tile-title">13.8 – 19.8</div>
+          <div class="day-tile-sub">אגם גארדה – 6 לילות</div>
+          <div class="day-tile-more">פרטים ›</div>
+        </div>
+        <div class="day-tile" onclick="openDetail('day9')">
+          <div class="day-tile-icon" style="background:#fce4ec">🌿</div>
+          <div class="day-tile-title">19.8 – 25.8</div>
+          <div class="day-tile-sub">טוסקנה – 6 לילות</div>
+          <div class="day-tile-more">פרטים ›</div>
+        </div>
+        <div class="day-tile" onclick="openDetail('day15')">
+          <div class="day-tile-icon" style="background:#fff3e0">🏛️</div>
+          <div class="day-tile-title">25.8 – 26.8</div>
+          <div class="day-tile-sub">רומא → הביתה</div>
+          <div class="day-tile-more">פרטים ›</div>
         </div>
       </div>
 
-      <!-- GARDA 13-19.8 -->
-      <div class="card" id="day3">
-        <div class="card-header" onclick="toggleCard('day3')">
-          <div class="card-icon" style="background:#e3f2fd">🏊</div>
-          <div class="card-info">
-            <div class="card-title">13.8 – 19.8</div>
-            <div class="card-sub">אגם גארדה – 6 לילות</div>
-          </div>
-          <div class="card-chevron">›</div>
+      <!-- Detail templates (rendered inside the bottom-sheet modal via openDetail) -->
+      <template id="tpl-day1">
+        <div class="region-badge">🏙️ מילאנו</div>
+        <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
+          <div style="font-size:15px;font-weight:700;color:#1c1c1e">Tribe Milano Malpensa</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Gabriele d'Annunzio 8, 21010 Vizzola Ticino (VA)</div>
+          <a href="https://maps.google.com/?q=Tribe+Milano+Malpensa+Via+Gabriele+D+Annunzio+8+Vizzola+Ticino" target="_blank"
+            style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
+            📍 Google Maps →
+          </a>
+          <a href="https://waze.com/ul?q=Via+Gabriele+D+Annunzio+8+Vizzola+Ticino+Italy" target="_blank"
+            style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+            🔵 Waze →
+          </a>
         </div>
-        <div class="card-body">
-          <div class="card-content">
-            <div class="region-badge">🏔️ אגם גארדה</div>
-            <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
-              <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
-              <div style="font-size:15px;font-weight:700;color:#1c1c1e">Splendido Bay</div>
-              <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Marconi 99, Padenghe sul Garda 25080 BS</div>
-              <a href="https://maps.google.com/?q=Splendido+Bay+Via+Marconi+99+Padenghe+sul+Garda" target="_blank"
-                style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 Google Maps →
-              </a>
-              <a href="https://waze.com/ul?q=Via+Marconi+99+Padenghe+sul+Garda+Italy" target="_blank"
-                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
-                🔵 Waze →
-              </a>
-            </div>
+        <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
 
-            <div class="activity">
-              <div class="activity-time">15.8</div>
-              <div class="activity-dot"></div>
-              <div class="activity-text">
-                <div class="activity-name">Gardaland 🎢</div>
-                <div class="activity-desc">בוקר בפארק השעשועים – Via Derna 4, Castelnuovo del Garda</div>
-                <div style="margin-top:6px">
-                  <a href="https://maps.google.com/?q=Gardaland+Via+Derna+4+Castelnuovo+del+Garda" target="_blank"
-                    style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
-                  <a href="https://waze.com/ul?q=Via+Derna+4+Castelnuovo+del+Garda+Italy" target="_blank"
-                    style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
-                </div>
-              </div>
-            </div>
+        <!-- CAR RENTAL -->
+        <div style="background:#fff3e0;border-radius:12px;padding:14px;margin-top:4px;border:1.5px solid #ffe0b2">
+          <div style="font-size:13px;font-weight:700;color:#e65100;margin-bottom:8px">🚗 השכרת רכב</div>
+          <div style="font-size:15px;font-weight:700;color:#1c1c1e">Nissan Qashqai (or similar)</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:2px">Intermediate SUV · Automatic · 5 seats · Unlimited mileage</div>
 
-            <div class="activity">
-              <div class="activity-time">17.8</div>
-              <div class="activity-dot"></div>
-              <div class="activity-text">
-                <div class="activity-name">Caneva The Aquapark 🌊</div>
-                <div class="activity-desc">בוקר בפארק המים – Via Fossalta 1, Lazise sul Garda</div>
-                <div style="margin-top:6px">
-                  <a href="https://maps.google.com/?q=Caneva+The+Aquapark+Via+Fossalta+1+Lazise+sul+Garda" target="_blank"
-                    style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
-                  <a href="https://waze.com/ul?q=Via+Fossalta+1+Lazise+sul+Garda+Italy" target="_blank"
-                    style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
-                </div>
-              </div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:8px;font-size:13px">
+              <span style="color:#6c6c70;width:60px;flex-shrink:0">📋 מספר</span>
+              <span style="font-weight:700;color:#1c1c1e">757582437</span>
             </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- TUSCANY 19-25 -->
-      <div class="card" id="day9">
-        <div class="card-header" onclick="toggleCard('day9')">
-          <div class="card-icon" style="background:#fce4ec">🌿</div>
-          <div class="card-info">
-            <div class="card-title">19.8 – 25.8</div>
-            <div class="card-sub">טוסקנה – 6 לילות</div>
-          </div>
-          <div class="card-chevron">›</div>
-        </div>
-        <div class="card-body">
-          <div class="card-content">
-            <div class="region-badge">🌿 טוסקנה</div>
-            <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
-              <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
-              <div style="font-size:15px;font-weight:700;color:#1c1c1e">Borgo Argenina</div>
-              <div style="font-size:13px;color:#6c6c70;margin-top:2px">Loc. Argenina, 53013 Gaiole in Chianti (Siena)</div>
-              <a href="https://maps.google.com/?q=Borgo+Argenina+Gaiole+in+Chianti+Siena" target="_blank"
-                style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 Google Maps →
-              </a>
-              <a href="https://waze.com/ul?q=Borgo+Argenina+Gaiole+in+Chianti+Italy" target="_blank"
-                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
-                🔵 Waze →
-              </a>
+            <div style="display:flex;gap:8px;font-size:13px">
+              <span style="color:#6c6c70;width:60px;flex-shrink:0">🔑 איסוף</span>
+              <span style="color:#1c1c1e">13.8 · 10:00 · Milan Malpensa T1</span>
             </div>
-            <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ROME + VERONA -->
-      <div class="card" id="day15">
-        <div class="card-header" onclick="toggleCard('day15')">
-          <div class="card-icon" style="background:#fff3e0">🏛️</div>
-          <div class="card-info">
-            <div class="card-title">25.8 – 26.8</div>
-            <div class="card-sub">רומא → הביתה</div>
-          </div>
-          <div class="card-chevron">›</div>
-        </div>
-        <div class="card-body">
-          <div class="card-content">
-            <div class="region-badge">🏛️ רומא</div>
-            <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
-              <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
-              <div style="font-size:15px;font-weight:700;color:#1c1c1e">900 Piazza del Popolo</div>
-              <div style="font-size:13px;color:#6c6c70;margin-top:2px">Piazzale Flaminio 9, 00196 Roma</div>
-              <a href="https://maps.google.com/?q=900+Piazza+del+Popolo+Piazzale+Flaminio+9+Rome" target="_blank"
-                style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
-                📍 Google Maps →
-              </a>
-              <a href="https://waze.com/ul?q=Piazzale+Flaminio+9+Rome+Italy" target="_blank"
-                style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
-                🔵 Waze →
-              </a>
+            <div style="display:flex;gap:8px;font-size:13px">
+              <span style="color:#6c6c70;width:60px;flex-shrink:0">🏁 החזרה</span>
+              <span style="color:#1c1c1e">26.8 · 09:30 · Fiumicino Airport (Rome)</span>
             </div>
-            <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
+            <div style="display:flex;gap:8px;font-size:13px">
+              <span style="color:#6c6c70;width:60px;flex-shrink:0">🏢 חברה</span>
+              <span style="color:#1c1c1e">Locauto · Level -1, Terminal 1</span>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;font-size:12px;background:#fff8f0;border-radius:8px;padding:8px 10px;color:#666;line-height:1.5">
+            📌 <strong>איך להגיע לדלפק:</strong> מגיעים לאזור Arrivals ב-T1 → עוקבים אחרי שלטי "Rent-a-car" / "Autonoleggi" → יורדים לקומה -1 → Locauto נמצא בצד ימין
+          </div>
+
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <a href="https://maps.google.com/?q=Locauto+Rent+Malpensa+Terminal+1+Ferno+Italy" target="_blank"
+              style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+            <a href="https://waze.com/ul?q=Aeroporto+Malpensa+Terminal+1+Ferno+Italy+21010" target="_blank"
+              style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">🔵 Waze →</a>
           </div>
         </div>
-      </div>
+      </template>
+
+      <template id="tpl-day3">
+        <div class="region-badge">🏔️ אגם גארדה</div>
+        <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
+          <div style="font-size:15px;font-weight:700;color:#1c1c1e">Splendido Bay</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:2px">Via Marconi 99, Padenghe sul Garda 25080 BS</div>
+          <a href="https://maps.google.com/?q=Splendido+Bay+Via+Marconi+99+Padenghe+sul+Garda" target="_blank"
+            style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
+            📍 Google Maps →
+          </a>
+          <a href="https://waze.com/ul?q=Via+Marconi+99+Padenghe+sul+Garda+Italy" target="_blank"
+            style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+            🔵 Waze →
+          </a>
+        </div>
+
+        <div class="activity">
+          <div class="activity-time">15.8</div>
+          <div class="activity-dot"></div>
+          <div class="activity-text">
+            <div class="activity-name">Gardaland 🎢</div>
+            <div class="activity-desc">בוקר בפארק השעשועים – Via Derna 4, Castelnuovo del Garda</div>
+            <div style="margin-top:6px">
+              <a href="https://maps.google.com/?q=Gardaland+Via+Derna+4+Castelnuovo+del+Garda" target="_blank"
+                style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+              <a href="https://waze.com/ul?q=Via+Derna+4+Castelnuovo+del+Garda+Italy" target="_blank"
+                style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="activity-time">17.8</div>
+          <div class="activity-dot"></div>
+          <div class="activity-text">
+            <div class="activity-name">Caneva The Aquapark 🌊</div>
+            <div class="activity-desc">בוקר בפארק המים – Via Fossalta 1, Lazise sul Garda</div>
+            <div style="margin-top:6px">
+              <a href="https://maps.google.com/?q=Caneva+The+Aquapark+Via+Fossalta+1+Lazise+sul+Garda" target="_blank"
+                style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+              <a href="https://waze.com/ul?q=Via+Fossalta+1+Lazise+sul+Garda+Italy" target="_blank"
+                style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template id="tpl-day9">
+        <div class="region-badge">🌿 טוסקנה</div>
+        <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
+          <div style="font-size:15px;font-weight:700;color:#1c1c1e">Borgo Argenina</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:2px">Loc. Argenina, 53013 Gaiole in Chianti (Siena)</div>
+          <a href="https://maps.google.com/?q=Borgo+Argenina+Gaiole+in+Chianti+Siena" target="_blank"
+            style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
+            📍 Google Maps →
+          </a>
+          <a href="https://waze.com/ul?q=Borgo+Argenina+Gaiole+in+Chianti+Italy" target="_blank"
+            style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+            🔵 Waze →
+          </a>
+        </div>
+
+        <div class="activity">
+          <div class="activity-time">21.8<br>בוקר</div>
+          <div class="activity-dot"></div>
+          <div class="activity-text">
+            <div class="activity-name">שופינג 🛍️ – טרם הוחלט</div>
+            <div class="activity-desc">4 אופציות על הפרק: PortaSiena / Centro Arezzo / Valdichiana / I Gigli — פרטים מלאים בטאב "שופינג"</div>
+            <div style="margin-top:6px">
+              <span onclick="switchToShoppingTab(event)" style="font-size:13px;color:#1a7a4a;font-weight:600;cursor:pointer">🛍️ לטאב שופינג →</span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template id="tpl-day15">
+        <div class="region-badge">🏛️ רומא</div>
+        <div style="background:#e8f4ed;border-radius:12px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:#135c37;margin-bottom:4px">🏨 המלון שלנו</div>
+          <div style="font-size:15px;font-weight:700;color:#1c1c1e">900 Piazza del Popolo</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:2px">Piazzale Flaminio 9, 00196 Roma</div>
+          <a href="https://maps.google.com/?q=900+Piazza+del+Popolo+Piazzale+Flaminio+9+Rome" target="_blank"
+            style="display:inline-block;margin-top:8px;font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">
+            📍 Google Maps →
+          </a>
+          <a href="https://waze.com/ul?q=Piazzale+Flaminio+9+Rome+Italy" target="_blank"
+            style="display:inline-block;margin-top:8px;margin-right:12px;font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none">
+            🔵 Waze →
+          </a>
+        </div>
+        <div style="color:#6c6c70;font-size:14px;padding:8px 0">פעילויות יתווספו בקרוב...</div>
+      </template>
 
       <!-- Tips -->
       <div class="section-title">טיפים חמים 🔥</div>
@@ -601,36 +629,40 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
 
           <!-- Stop list -->
           <div class="route-stops" style="margin-top:20px">
-            <div class="route-stop">
+            <div class="route-stop clickable" onclick="openDetail('day1')">
               <div class="route-stop-dot">✈️</div>
               <div class="route-stop-info">
                 <div class="route-stop-name">מילאנו</div>
                 <div class="route-stop-dates">12.8 – לילה אחד · הגעה 18:40</div>
               </div>
+              <div class="route-stop-arrow">‹</div>
             </div>
             <div class="route-line-v"></div>
-            <div class="route-stop">
+            <div class="route-stop clickable" onclick="openDetail('day3')">
               <div class="route-stop-dot">🏊</div>
               <div class="route-stop-info">
                 <div class="route-stop-name">אגם גארדה</div>
                 <div class="route-stop-dates">13.8 – 19.8 · 6 לילות</div>
               </div>
+              <div class="route-stop-arrow">‹</div>
             </div>
             <div class="route-line-v"></div>
-            <div class="route-stop">
+            <div class="route-stop clickable" onclick="openDetail('day9')">
               <div class="route-stop-dot">🌿</div>
               <div class="route-stop-info">
                 <div class="route-stop-name">טוסקנה</div>
                 <div class="route-stop-dates">19.8 – 25.8 · 6 לילות · פירנצה, סיינה, קיאנטי</div>
               </div>
+              <div class="route-stop-arrow">‹</div>
             </div>
             <div class="route-line-v"></div>
-            <div class="route-stop">
+            <div class="route-stop clickable" onclick="openDetail('day15')">
               <div class="route-stop-dot">🏛️</div>
               <div class="route-stop-info">
                 <div class="route-stop-name">רומא</div>
                 <div class="route-stop-dates">25.8 – לילה אחד · קולוסיאום, טרסטוורה</div>
               </div>
+              <div class="route-stop-arrow">‹</div>
             </div>
             <div class="route-line-v"></div>
             <div class="route-stop">
@@ -738,6 +770,108 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
     </div><!-- /page-tickets -->
 
 
+    <!-- ── PAGE: SHOPPING ── -->
+    <div class="page" id="page-shopping">
+      <div class="section-title">שופינג – אופציות ל-21.8 בבוקר</div>
+      <div style="margin:0 16px 12px;font-size:13px;color:#6c6c70;line-height:1.5">עדיין לא הוחלט סופית – 4 אופציות עם מרחקים מדויקים מבורגו ארג'נינה (נבדק בגוגל מפות/וייז).</div>
+
+      <!-- GALLERIA PORTASIENA -->
+      <div class="card">
+        <div class="card-content" style="padding:16px">
+          <div class="region-badge" style="background:#8e44ad">🏪 Galleria PortaSiena</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:4px">Piazzale Rosselli 25, 53100 Siena — ליד תחנת הרכבת</div>
+          <div style="font-size:12px;color:#1a7a4a;font-weight:700;margin-top:4px">🚗 23 דק' · 16.6 ק"מ מבורגו ארג'נינה — הכי קרוב!</div>
+          <div style="margin-top:8px">
+            <a href="https://maps.google.com/?q=Galleria+PortaSiena+Piazzale+Rosselli+25+Siena" target="_blank"
+              style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+            <a href="https://waze.com/ul?q=Piazzale+Rosselli+25+Siena+Italy" target="_blank"
+              style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
+          </div>
+
+          <div style="margin-top:12px;background:#f2f2f7;border-radius:12px;padding:12px 14px">
+            <div style="font-size:13px;font-weight:700;color:#1c1c1e;margin-bottom:6px">🛍️ חנויות (מתוך ~28)</div>
+            <div style="font-size:13px;color:#3a3a3c;line-height:1.9">
+              Cisalfa (ספורט) · Oltre · Fiorella Rubino · Golden Point · Pandora · Bluespirit · PAM (סופרמרקט) · Unieuro (אלקטרוניקה) · Salmoiraghi e Viganò (אופטיקה) · KFC · Old Wild West
+            </div>
+            <div style="font-size:12px;color:#6c6c70;margin-top:8px">קניון קטן ורגיל — אין בו Zara/H&amp;M, אבל הכי נוח אם ממילא מתכננים יום בסיינה.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTRO AREZZO -->
+      <div class="card">
+        <div class="card-content" style="padding:16px">
+          <div class="region-badge" style="background:#2980b9">🏬 CENTRO*Arezzo</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:4px">Viale Giovanni Amendola 13/15, 52100 Arezzo</div>
+          <div style="font-size:12px;color:#6c6c70;margin-top:4px">🚗 1 שעה 8 דק' · 90 ק"מ מבורגו ארג'נינה</div>
+          <div style="font-size:12px;color:#6c6c70">🕙 חנויות: א'-ש' 9:00-20:30 (סגור בשבת) · סופר עד 21:00</div>
+          <div style="margin-top:8px">
+            <a href="https://maps.google.com/?q=Centro+Arezzo+Viale+Giovanni+Amendola+13+Arezzo" target="_blank"
+              style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+            <a href="https://waze.com/ul?q=Viale+Giovanni+Amendola+13+Arezzo+Italy" target="_blank"
+              style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
+          </div>
+
+          <div style="margin-top:12px;background:#f2f2f7;border-radius:12px;padding:12px 14px">
+            <div style="font-size:13px;font-weight:700;color:#1c1c1e;margin-bottom:6px">🛍️ חנויות (מתוך ~20)</div>
+            <div style="font-size:13px;color:#3a3a3c;line-height:1.9">
+              <strong>H&amp;M</strong> · <strong>Decathlon</strong> · <strong>Original Marines</strong> (בגדי ילדים) · Intimissimi · Calzedonia · Coincasa · Euronics · Douglas · Coop (סופרמרקט) · Wycon · Boncompagni (תכשיטים)
+            </div>
+            <div style="font-size:12px;color:#6c6c70;margin-top:8px">מותגי רשת רגילים במחירים טובים — כולל חנות בגדי ילדים (Original Marines), מתאים מאוד למה שביקשת. גם אפשר לשלב עם ארצו עצמה.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VALDICHIANA VILLAGE -->
+      <div class="card">
+        <div class="card-content" style="padding:16px">
+          <div class="region-badge">🏷️ Valdichiana Designer Village</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:4px">Via Enzo Ferrari 5, Loc. Le Farniole, 52045 Foiano della Chiana (AR)</div>
+          <div style="font-size:12px;color:#6c6c70;margin-top:4px">🚗 44 דק' · 54.5 ק"מ מבורגו ארג'נינה</div>
+          <div style="font-size:12px;color:#6c6c70">🕙 פתוח יומי 10:00–20:00</div>
+          <div style="margin-top:8px">
+            <a href="https://maps.google.com/?q=Valdichiana+Designer+Village+Via+Enzo+Ferrari+5+Foiano+della+Chiana" target="_blank"
+              style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+            <a href="https://waze.com/ul?q=Via+Enzo+Ferrari+5+Foiano+della+Chiana+Italy" target="_blank"
+              style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
+          </div>
+
+          <div style="margin-top:12px;background:#f2f2f7;border-radius:12px;padding:12px 14px">
+            <div style="font-size:13px;font-weight:700;color:#1c1c1e;margin-bottom:6px">🛍️ מותגים עיקריים (מתוך ~130 חנויות)</div>
+            <div style="font-size:13px;color:#3a3a3c;line-height:1.9">
+              Gucci · Prada · Dolce &amp; Gabbana · Calvin Klein · Tommy Hilfiger · Guess · Levi's · Nike · Adidas · Champion · Kappa · North Sails · Gant · Desigual · GAP · Geox · Bata · Brooks Brothers · Kiko Milano · Bialetti
+            </div>
+            <div style="font-size:12px;color:#6c6c70;margin-top:8px">אאוטלט יוקרתי – הנחות של 30%-70% כל השנה. שים לב: יקר יותר גם עם ההנחה ביחס לשתי האופציות למעלה. יש גם בתי קפה ומסעדות בשטח.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- I GIGLI -->
+      <div class="card">
+        <div class="card-content" style="padding:16px">
+          <div class="region-badge" style="background:var(--gold)">🏬 I Gigli</div>
+          <div style="font-size:13px;color:#6c6c70;margin-top:4px">Via San Quirico 165, 50013 Campi Bisenzio (FI)</div>
+          <div style="font-size:12px;color:#6c6c70;margin-top:4px">🚗 1 שעה 22 דק' · 97.7 ק"מ מבורגו ארג'נינה — הכי רחוק</div>
+          <div style="margin-top:8px">
+            <a href="https://maps.google.com/?q=I+Gigli+Via+San+Quirico+165+Campi+Bisenzio" target="_blank"
+              style="font-size:13px;color:#1a7a4a;font-weight:600;text-decoration:none">📍 Google Maps →</a>
+            <a href="https://waze.com/ul?q=Via+San+Quirico+165+Campi+Bisenzio+Italy" target="_blank"
+              style="font-size:13px;color:#05c3f9;font-weight:600;text-decoration:none;margin-right:12px">🔵 Waze →</a>
+          </div>
+
+          <div style="margin-top:12px;background:#f2f2f7;border-radius:12px;padding:12px 14px">
+            <div style="font-size:13px;font-weight:700;color:#1c1c1e;margin-bottom:6px">🛍️ מותגים עיקריים (מתוך ~140 חנויות)</div>
+            <div style="font-size:13px;color:#3a3a3c;line-height:1.9">
+              Apple Store · Zara · H&amp;M · Hollister · Sephora · Tommy Hilfiger · Napapijri · Nike · Adidas · Levi's · Swatch · Nespresso · Lush · Dyson · Mediaworld · Fnac · Coin · Bata
+            </div>
+            <div style="font-size:12px;color:#6c6c70;margin-top:8px">קניון מקורה (לא אאוטלט) – בונוס: יש בו סניף של <strong>All'Antico Vinaio</strong> לכריכים (ראו המלצה בטאב ימים/מסלול), וגם היפרמרקט + פודקורט. הכי רחוק מהיעדים — כדאי רק אם משלבים עם יום בפירנצה.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-shopping -->
+
+
     <!-- ── PAGE 3: CHAT ── -->
     <div class="page" id="page-chat">
       <div class="chat-messages" id="chatMessages">
@@ -799,6 +933,10 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
       <div class="tab-icon">🎫</div>
       <div class="tab-label">כרטיסים</div>
     </button>
+    <button class="tab" id="tabShopping" onclick="switchTab('shopping',this)">
+      <div class="tab-icon">🛍️</div>
+      <div class="tab-label">שופינג</div>
+    </button>
     <button class="tab" onclick="switchTab('chat',this)">
       <div class="tab-icon">💬</div>
       <div class="tab-label">צ'אט</div>
@@ -815,6 +953,22 @@ html,body{height:100%;overflow:hidden;background:#f2f2f7;font-family:-apple-syst
   <button class="lb-close">✕</button>
   <img id="lbImg" src="" alt=""/>
   <div class="lb-caption" id="lbCaption"></div>
+</div>
+
+<!-- DESTINATION DETAIL SHEET -->
+<div class="detail-modal" id="detailModal" onclick="if(event.target===this) closeDetail()">
+  <div class="detail-sheet">
+    <div class="detail-sheet-handle"></div>
+    <div class="detail-sheet-header">
+      <div class="detail-sheet-icon" id="detailIcon"></div>
+      <div>
+        <div class="detail-sheet-title" id="detailTitle"></div>
+        <div class="detail-sheet-sub" id="detailSub"></div>
+      </div>
+      <button class="detail-sheet-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-sheet-body" id="detailBody"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"></script>
@@ -874,10 +1028,31 @@ function switchTab(name, btn) {
   }
 }
 
-// ── CARD TOGGLE ──
-function toggleCard(id) {
-  const card = document.getElementById(id);
-  card.classList.toggle('open');
+function switchToShoppingTab(event) {
+  event.stopPropagation();
+  closeDetail();
+  switchTab('shopping', document.getElementById('tabShopping'));
+}
+
+// ── DESTINATION DETAIL SHEET ──
+const DEST_INFO = {
+  day1:  { icon:'🏙️', title:'מילאנו',      sub:'12.8 – 13.8 · לילה אחד' },
+  day3:  { icon:'🏊', title:'אגם גארדה',    sub:'13.8 – 19.8 · 6 לילות' },
+  day9:  { icon:'🌿', title:'טוסקנה',       sub:'19.8 – 25.8 · 6 לילות' },
+  day15: { icon:'🏛️', title:'רומא',        sub:'25.8 – 26.8 · חזרה' }
+};
+function openDetail(id) {
+  const info = DEST_INFO[id];
+  document.getElementById('detailIcon').textContent = info.icon;
+  document.getElementById('detailTitle').textContent = info.title;
+  document.getElementById('detailSub').textContent = info.sub;
+  document.getElementById('detailBody').innerHTML = document.getElementById('tpl-' + id).innerHTML;
+  document.getElementById('detailModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 // ── FIREBASE CHAT ──
